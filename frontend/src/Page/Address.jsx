@@ -201,7 +201,7 @@ const Address = () => {
 
 
                                 <div className="d-flex gap-3">
-                                    <img src={`http://localhost:5000/upload/${item.productId.images[0]}`} alt="product" className="rounded img-fluid" style={{ maxHeight: "100px" }} />
+                                    <img src={`upload/${item.productId.images[0]}`} alt="product" className="rounded img-fluid" style={{ maxHeight: "100px" }} />
 
                                     <div className="flex-grow-1">
                                         <div className="fw-semibold">

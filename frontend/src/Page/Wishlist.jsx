@@ -52,7 +52,7 @@ export default function Wishlist() {
               <button className="wishlist-close" onClick={() => remove_heart(product._id)}>×</button>
 
               <div className="p-2">
-                <img src={`http://localhost:5000/upload/${product.images[0]}`} className="img-fluid" alt={product.name} />
+                <img src={`upload/${product.images[0]}`} className="img-fluid" alt={product.name} />
               </div>
 
               <div className="text-center px-2 pb-3">

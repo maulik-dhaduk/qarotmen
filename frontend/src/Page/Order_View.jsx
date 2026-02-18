@@ -79,7 +79,7 @@ const Order_View = () => {
               {order.products.map((item, index) => (
                 <tr key={index}>
                   <td style={{ width: "120px" }}>
-                    <img src={`http://localhost:5000/upload/${item.productId.images[0]}`} alt="product" className="img-fluid rounded" style={{ height: "120px", objectFit: "cover" }}/>
+                    <img src={`upload/${item.productId.images[0]}`} alt="product" className="img-fluid rounded" style={{ height: "120px", objectFit: "cover" }}/>
                   </td>
                   <td>{item.productId.name}</td>
                   <td>{item.size}</td>

@@ -93,7 +93,7 @@ const Cart = () => {
                   return (
                     <div className="border rounded-3 p-3 mb-3" key={item._id}>
                       <div className="d-flex gap-3">
-                        <img src={`http://localhost:5000/upload/${item.productId.images[0]}`} alt="product" className="rounded img-fluid" style={{ maxHeight: "160px" }} />
+                        <img src={`upload/${item.productId.images[0]}`} alt="product" className="rounded img-fluid" style={{ maxHeight: "160px" }} />
 
                         <div className="flex-grow-1">
                           <div className="fw-semibold">

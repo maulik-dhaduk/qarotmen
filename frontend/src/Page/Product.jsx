@@ -113,7 +113,7 @@ export default function Product() {
           <div className="row g-3">
             <div className="col-3 d-flex flex-column gap-2 thumb-all d-none d-sm-block" data-aos="fade-up">
               {product.images.map((img, index) => (
-                <img key={index} src={`http://localhost:5000/upload/${img}`} className={`mb-2 thumb-img img-fluid ${mainImage === img ? "selected" : ""}`} onClick={() => setMainImage(img)} alt=""
+                <img key={index} src={`upload/${img}`} className={`mb-2 thumb-img img-fluid ${mainImage === img ? "selected" : ""}`} onClick={() => setMainImage(img)} alt=""
                 />
               ))}
             </div>
@@ -121,7 +121,7 @@ export default function Product() {
 
             <div className="col-9 main_img_all d-none d-sm-block" data-aos="zoom-in">
               <div className="m-5 mt-0">
-                <img src={`http://localhost:5000/upload/${mainImage}`} className="main-img img-fluid" alt="" />
+                <img src={`upload/${mainImage}`} className="main-img img-fluid" alt="" />
               </div>
             </div>
 
@@ -137,7 +137,7 @@ export default function Product() {
                 <div className="carousel-inner">
                   {product.images.map((imgUrl, index) => (
                     <div key={index} className={`carousel-item ${index === 0 ? "active" : ""}`}>
-                      <img src={`http://localhost:5000/upload/${imgUrl}`} className="d-block w-100" alt={`Slide ${index}`} />
+                      <img src={`upload/${imgUrl}`} className="d-block w-100" alt={`Slide ${index}`} />
                     </div>
                   ))}
                 </div>

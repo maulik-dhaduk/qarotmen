@@ -57,7 +57,7 @@ export default function Search() {
                 <div key={item._id} className="col-6 col-md-4 col-lg-3">
 
                   <div className="position-relative">
-                    <img src={`http://localhost:5000/upload/${item.images[0]}`} className="img-fluid" style={{ cursor: "pointer" }} alt="" onClick={() => handleid(item._id)} />
+                    <img src={`upload/${item.images[0]}`} className="img-fluid" style={{ cursor: "pointer" }} alt="" onClick={() => handleid(item._id)} />
                     <h5 className="p  osition-absolute top-0 end-0 p-2 py-1 mt-3 me-3 rounded-5" style={{ cursor: "pointer" }} onClick={() => add_heart(item._id)}>
                       <i className={wishlist.includes(item._id) ? "bi bi-heart-fill text-danger" : "bi bi-heart"}></i>
                     </h5>
