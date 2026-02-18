@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const Api = axios.create({
-    baseURL:"http://localhost:5000"
+    baseURL:"https://qarotmen.onrender.com"
 })
 
 export default Api
