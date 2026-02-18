@@ -18,6 +18,10 @@ app.use("/upload", express.static("upload"));
 
 default_product()
 
+app.get("/health", (req, res) => {
+  res.status(200).send("OK");
+});
+
 app.use(product_router);
 app.use(account_router);
 app.use(wishlist_router);
