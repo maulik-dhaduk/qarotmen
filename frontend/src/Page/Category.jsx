@@ -93,7 +93,7 @@ export default function Category() {
                         <div key={p._id} className="col-6 col-md-4 col-lg-3" data-aos="fade-up" data-aos-delay={index * 100} data-aos-duration="2000">
 
                             <div className="position-relative">
-                                <img src={`upload/${p.images[0]}`} className="img-fluid" style={{ cursor: "pointer" }} alt="" onClick={() => handleid(p._id)} />
+                                <img src={`/upload/${p.images[0]}`} className="img-fluid" style={{ cursor: "pointer" }} alt="" onClick={() => handleid(p._id)} />
 
                                 <h5 className="position-absolute top-0 end-0 p-2 py-1 mt-3 me-3 rounded-5" style={{ cursor: "pointer" }} onClick={() => add_heart(p._id)}>
                                     <i className={wishlist.includes(p._id) ? "bi bi-heart-fill text-danger" : "bi bi-heart"}></i>
