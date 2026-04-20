@@ -8,6 +8,7 @@ import "aos/dist/aos.css";
 
 export default function Product() {
   const [size, setSize] = useState("S");
+  const [loading, setLoading] = useState(true);
   const [searchParams] = useSearchParams();
   const [product, setProduct] = useState(null);
   const [mainImage, setMainImage] = useState(null);
@@ -21,10 +22,13 @@ export default function Product() {
 
   const getProduct = async () => {
     try {
+      setLoading(true);
       const res = await Api.get(`/findproduct?id=${id}`);
       setProduct(res.data);
     } catch (error) {
-      alert(error);
+      console.error(error);
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -98,6 +102,14 @@ export default function Product() {
     });
     window.scrollTo(0,0)
   }, []);
+
+  if (loading) return (
+    <div className="d-flex justify-content-center align-items-center" style={{ minHeight: '60vh' }}>
+      <div className="spinner-border" role="status">
+        <span className="visually-hidden">Loading...</span>
+      </div>
+    </div>
+  );
 
   if (!product) return <h3 className="text-center mt-5">Product not found</h3>;
 

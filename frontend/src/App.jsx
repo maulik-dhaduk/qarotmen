@@ -12,8 +12,19 @@ import Payment from "./Page/Payment";
 import OrderConfirmation from "./Page/OrderConfirmation";
 import Order_Detail from "./Page/Order-Detail";
 import Order_View from "./Page/Order_View";
+import AOS from "aos";
+import "aos/dist/aos.css";
+import { useEffect } from "react";
 
 function App() {
+
+  useEffect(() => {
+    AOS.init({
+      once: true,
+      duration: 1000,
+      offset: 0,
+    });
+  }, []);
 
   return (
     <>

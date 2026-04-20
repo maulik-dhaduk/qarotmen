@@ -4,19 +4,26 @@ import { useEffect, useState } from "react";
 import Api from "../Services/Api"
 import { useWishlist } from "../context/WishlistContext";
 import AOS from "aos";
-import "aos/dist/aos.css";
 
 export default function Category() {
 
     const { categoryvalue } = useParams()
     const [products, setProducts] = useState([]);
+    const [loading, setLoading] = useState(true);
     const [sortOption, setSortOption] = useState("");
     const { wishlist, fetchWishlist } = useWishlist();
     const navigate = useNavigate()
 
     const apiCall = async () => {
-        const res = await Api.get("/products");
-        setProducts(res.data);
+        try {
+            setLoading(true);
+            const res = await Api.get("/products");
+            setProducts(res.data);
+        } catch (error) {
+            console.error(error);
+        } finally {
+            setLoading(false);
+        }
     }
 
     const add_heart = async (productId) => {
@@ -47,6 +54,12 @@ export default function Category() {
         window.scrollTo(0,0)
     }, [])
 
+    useEffect(() => {
+        if (products.length > 0) {
+            setTimeout(() => AOS.refresh(), 100);
+        }
+    }, [products]);
+
 
     const filteredProducts = products.filter(p =>
         p.category?.includes(categoryvalue)
@@ -68,11 +81,15 @@ export default function Category() {
         }
     });
 
-    useEffect(() => {
-        AOS.init({
-            once: true,
-        });
-    }, []);
+
+    if (loading) return (
+        <div className="d-flex justify-content-center align-items-center" style={{ minHeight: '60vh' }}>
+            <div className="spinner-border" role="status">
+                <span className="visually-hidden">Loading...</span>
+            </div>
+        </div>
+    );
+
     return (
         <div className="container-fluid">
             <div className="mt-5">
@@ -90,7 +107,7 @@ export default function Category() {
                     </div>
 
                     {sortedProducts.map((p, index) => (
-                        <div key={p._id} className="col-6 col-md-4 col-lg-3" data-aos="fade-up" data-aos-delay={index * 100} data-aos-duration="2000">
+                        <div key={p._id} className="col-6 col-md-4 col-lg-3" data-aos="fade-up" data-aos-delay={Math.min(index * 50, 300)} data-aos-duration="600" data-aos-offset="0">
 
                             <div className="position-relative">
                                 <img src={`/upload/${p.images[0]}`} className="img-fluid" style={{ cursor: "pointer" }} alt="" onClick={() => handleid(p._id)} />

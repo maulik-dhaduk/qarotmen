@@ -3,7 +3,6 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import Api from "../Services/Api"
 import { useWishlist } from "../context/WishlistContext";
-import AOS from "aos";
 import "aos/dist/aos.css";
 
 export default function Home() {
@@ -77,12 +76,6 @@ export default function Home() {
     navigate(`/category/${categoryvalue}`)
   };
 
-  useEffect(() => {
-    AOS.init({
-      once: true,
-    });
-  }, []);
-
   return (
     <>
       {loginSuccess && (
@@ -95,26 +88,32 @@ export default function Home() {
           Logout Successfully!
         </h5>
       )}
-      <div className="row g-0 m-0 text-center align-items-center" style={{ overflowX: "hidden" }}>
-        <div className="col-lg-6 col-12 bg-danger text-white" data-aos="fade-right" data-aos-offset="300" data-aos-easing="ease-in-sine" data-aos-duration="2000">
-          <span className="fw-bold d-block special-offer">Special Offer!</span>
-          <div className="d-flex justify-content-center gap-3 fs-5 flex-wrap">
-            <div data-aos="fade-up" data-aos-delay="300" data-aos-duration="1000"><span className="special-offer">Best</span><small className="special-offer">Choice</small></div>
-            <div data-aos="fade-up" data-aos-delay="400" data-aos-duration="1050"><span className="special-offer">For</span><small className="special-offer">You</small></div>
-            <div data-aos="fade-up" data-aos-delay="500" data-aos-duration="2000"><span className="special-offer">Shop</span><small className="special-offer">Now</small></div>
-            <div data-aos="fade-up" data-aos-delay="600" data-aos-duration="2050"><span className="special-offer">Today</span><small className="special-offer">Only</small></div>
+      <div style={{ overflow: "clip", width: "100%" }}>
+        <div className="row g-0 m-0 text-center align-items-center">
+          <div className="col-lg-6 col-12 bg-danger text-white py-2">
+            <div data-aos="fade-right" data-aos-easing="ease-in-sine" data-aos-duration="1500" data-aos-offset="0">
+              <span className="fw-bold d-block special-offer">Special Offer!</span>
+              <div className="d-flex justify-content-center gap-2 gap-md-3 fs-6 fs-md-5 flex-wrap">
+                <div data-aos="fade-up" data-aos-delay="300" data-aos-duration="1000"><span className="special-offer">Best</span><small className="special-offer ps-1">Choice</small></div>
+                <div data-aos="fade-up" data-aos-delay="400" data-aos-duration="1050"><span className="special-offer">For</span><small className="special-offer ps-1">You</small></div>
+                <div data-aos="fade-up" data-aos-delay="500" data-aos-duration="2000"><span className="special-offer">Shop</span><small className="special-offer ps-1">Now</small></div>
+                <div data-aos="fade-up" data-aos-delay="600" data-aos-duration="2050"><span className="special-offer">Today</span><small className="special-offer ps-1">Only</small></div>
+              </div>
+            </div>
           </div>
-        </div>
 
-        <div className="col-lg-6 col-12" style={{ backgroundColor: "#fff6f7" }} data-aos="fade-left" data-aos-offset="300" data-aos-easing="ease-in-sine" data-aos-duration="2000">
-          <span className="fs-5 d-block special-offer" data-aos="fade-down" data-aos-delay="400" data-aos-duration="1050">
-            Enjoy amazing deals on our collection! 🎉
-          </span>
-          <div className="mt-1 special-offer" data-aos="fade-down" data-aos-delay="400" data-aos-duration="2000">
-            Check out the latest offers in our store
-            <Link to="/product" className="ms-2 text-dark text-decoration-underline">
-              Learn More
-            </Link>
+          <div className="col-lg-6 col-12 py-2" style={{ backgroundColor: "#fff6f7" }}>
+            <div data-aos="fade-left" data-aos-easing="ease-in-sine" data-aos-duration="1500" data-aos-offset="0">
+              <span className="fs-6 fs-md-5 d-block special-offer" data-aos="fade-down" data-aos-delay="400" data-aos-duration="1050">
+                Enjoy amazing deals on our collection! 🎉
+              </span>
+              <div className="mt-1 special-offer" data-aos="fade-down" data-aos-delay="400" data-aos-duration="2000">
+                Check out the latest offers in our store
+                <Link to="/product" className="ms-2 text-dark text-decoration-underline">
+                  Learn More
+                </Link>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -265,8 +264,8 @@ export default function Home() {
 
         <div className="mt-5">
           <div className="row g-4">
-            <div className="col-12 col-sm-6 col-lg-4" data-aos="fade-right" data-aos-duration="3000">
-              <div className="card h-100 border-1">
+            <div className="col-12 col-sm-6 col-lg-4">
+              <div className="card h-100 border-1" data-aos="fade-right" data-aos-duration="2000">
                 <img src="blog/image1.png" className="card-img-top img-fluid" alt="blog" />
                 <div className="card-body">
                   <h6 className="card-title fw-bold">
@@ -280,8 +279,8 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="col-12 col-sm-6 col-lg-4" data-aos="fade-right" data-aos-duration="3000">
-              <div className="card h-100 border-1">
+            <div className="col-12 col-sm-6 col-lg-4">
+              <div className="card h-100 border-1" data-aos="fade-right" data-aos-duration="2000">
                 <img src="blog/image2.png" className="card-img-top img-fluid" alt="blog" />
                 <div className="card-body">
                   <h6 className="card-title fw-bold">
@@ -295,8 +294,8 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="col-12 col-sm-6 col-lg-4" data-aos="fade-right" data-aos-duration="3000">
-              <div className="card h-100 border-1">
+            <div className="col-12 col-sm-6 col-lg-4">
+              <div className="card h-100 border-1" data-aos="fade-right" data-aos-duration="2000">
                 <img src="blog/image3.png" className="card-img-top img-fluid" alt="blog" />
                 <div className="card-body">
                   <h6 className="card-title fw-bold">

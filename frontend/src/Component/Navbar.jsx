@@ -85,10 +85,6 @@ export default function Navbar() {
 
   }, []);
 
-  useEffect(() => {
-    AOS.init({
-    });
-  }, []);
 
 
   const handleLogout = () => {
@@ -149,8 +145,8 @@ export default function Navbar() {
           </div>
 
           <div className="d-flex align-items-center gap-3 fs-5 mt-2 mt-sm-0 m-auto m-sm-0">
-            <div className="flex-grow-1 mx-2 nav-search" data-aos="fade-left" data-aos-easing="linear" data-aos-duration="850">
-              <div className="position-relative">
+            <div className="flex-grow-1 mx-2 nav-search">
+              <div className="position-relative" data-aos="fade-left" data-aos-easing="linear" data-aos-duration="850">
                 <input type="search" className="form-control rounded-pill ps-3 pe-5 w-100" name="search" ref={inputref} placeholder="Search" />
                 <span className="position-absolute top-50 end-0 translate-middle-y me-3 text-muted">
                   <i className="bi bi-search" onClick={searchresult} style={{ cursor: "pointer" }}></i>
@@ -159,8 +155,8 @@ export default function Navbar() {
             </div>
 
             <div className="d-flex gap-3 fs-5 fs-lg-6 align-items-center">
-              <div className="position-relative d-inline-block" data-aos="zoom-in" data-aos-easing="linear" data-aos-duration="850">
-                <Link to="/wishlist" className="p-0 text-dark">
+              <div className="position-relative d-inline-block">
+                <Link to="/wishlist" className="p-0 text-dark" data-aos="zoom-in" data-aos-easing="linear" data-aos-duration="850">
                   <i className="bi bi-heart fs-5"></i>
                 </Link>
 
@@ -197,8 +193,8 @@ export default function Navbar() {
                 </button>
               )}
 
-              <div className="position-relative d-inline-block" data-aos="zoom-in" data-aos-easing="linear" data-aos-duration="850">
-                <Link to="/cart" className="p-0 text-dark">
+              <div className="position-relative d-inline-block">
+                <Link to="/cart" className="p-0 text-dark" data-aos="zoom-in" data-aos-easing="linear" data-aos-duration="850">
                   <i className="bi bi-bag fs-5"></i>
                 </Link>
 
@@ -243,7 +239,7 @@ export default function Navbar() {
               </div>
             </li>
 
-            <li className="nav-item">
+            <li className="nav-item" data-aos="fade-right" data-aos-easing="linear" data-aos-duration="850">
               <a className="nav-link d-flex justify-content-between align-items-center"
                 data-bs-toggle="collapse" href="#m-top">
                 Bottomwear
@@ -251,8 +247,8 @@ export default function Navbar() {
               </a>
               <div className="collapse" id="m-top" data-bs-parent="#mobileAccordion">
                 <ul className="navbar-nav ps-3 fs-6">
-                  <li><a className="nav-link" onClick={() => handleLinkClick("Pants")}>Pants</a></li>
-                  <li><a className="nav-link" onClick={() => handleLinkClick("Shorts")}>Shorts</a></li>
+                  <li><a className="nav-link" data-bs-dismiss="offcanvas" onClick={() => handleLinkClick("Pants")}>Pants</a></li>
+                  <li><a className="nav-link" data-bs-dismiss="offcanvas" onClick={() => handleLinkClick("Shorts")}>Shorts</a></li>
                 </ul>
               </div>
             </li>
