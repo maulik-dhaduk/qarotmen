@@ -9,7 +9,7 @@ export default function Search() {
   const [searchParams] = useSearchParams();
   const search = searchParams.get("query");
   const [products, setProducts] = useState([]);
-  const { wishlist, fetchWishlist } = useWishlist();
+  const { wishlist, fetchWishlist, toggleWishlist } = useWishlist();
 
   const navigate = useNavigate();
 
@@ -17,22 +17,7 @@ export default function Search() {
     navigate(`/Product?id=${id}`)
   })
 
-  const add_heart = async (productId) => {
-    const token = localStorage.getItem("token");
 
-    if (!token) {
-      const loginBtn = document.querySelector(
-        '[data-bs-target="#authModal"]'
-      );
-      loginBtn?.click();
-      return;
-    }
-    await Api.post('/wishlist-toggle', { productId },{
-      headers: {
-        Authorization: `Bearer ${token}`
-      }})
-    fetchWishlist();
-  }
 
   useEffect(() => {
     result()
@@ -58,7 +43,7 @@ export default function Search() {
 
                   <div className="position-relative">
                     <img src={`upload/${item.images[0]}`} className="img-fluid" style={{ cursor: "pointer" }} alt="" onClick={() => handleid(item._id)} />
-                    <h5 className="p  osition-absolute top-0 end-0 p-2 py-1 mt-3 me-3 rounded-5" style={{ cursor: "pointer" }} onClick={() => add_heart(item._id)}>
+                    <h5 className="p  osition-absolute top-0 end-0 p-2 py-1 mt-3 me-3 rounded-5" style={{ cursor: "pointer" }} onClick={() => toggleWishlist(item._id)}>
                       <i className={wishlist.includes(item._id) ? "bi bi-heart-fill text-danger" : "bi bi-heart"}></i>
                     </h5>
                   </div>

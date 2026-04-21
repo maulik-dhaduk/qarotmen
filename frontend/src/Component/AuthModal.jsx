@@ -1,7 +1,7 @@
 import Signin from "../Page/Signin";
 import Signup from "../Page/Signup";
 
-export default function AuthModal({ showLogin, setShowLogin }) {
+export default function AuthModal({ showLogin, setShowLogin, onLoginSuccess }) {
   return (
     <div className="modal fade" id="authModal" tabIndex="-1">
       <div className="modal-dialog modal-dialog-centered">
@@ -14,7 +14,7 @@ export default function AuthModal({ showLogin, setShowLogin }) {
 
           <div className="modal-body">
             {showLogin ? (
-              <Signin switchToRegister={() => setShowLogin(false)} />
+              <Signin switchToRegister={() => setShowLogin(false)} onLoginSuccess={onLoginSuccess} />
             ) : (
               <Signup switchToLogin={() => setShowLogin(true)} />
             )}

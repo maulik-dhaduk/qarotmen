@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import AuthModal from "./AuthModal";
 import Api from "../Services/Api"
 import { useWishlist } from "../context/WishlistContext";
@@ -12,9 +12,35 @@ export default function Navbar() {
   const navigate = useNavigate()
   const [showLogin, setShowLogin] = useState(true);
   const [user, setUser] = useState(null);
-  const { wishlist } = useWishlist();
-  const { cart } = useCart();
+  const { wishlist, fetchWishlist } = useWishlist();
+  const { cart, fetchCart } = useCart();
   const inputref = useRef()
+
+  const fetchUserProfile = () => {
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      setUser(null);
+      return;
+    }
+
+    Api.get("/profile", {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
+      .then(res => {
+        setUser(res.data);
+        fetchWishlist();
+        fetchCart();
+      })
+      .catch(() => {
+        localStorage.removeItem("token");
+        setUser(null);
+        fetchWishlist();
+        fetchCart();
+      });
+  };
 
   const searchresult = () => {
     const searchvalue = inputref.current.value.trim();
@@ -50,26 +76,7 @@ export default function Navbar() {
         );
       });
     });
-
-
-
-    const token = localStorage.getItem("token");
-
-    if (token) {
-      Api.get("/profile", {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      })
-        .then(res => setUser(res.data))
-        .catch(() => {
-          localStorage.removeItem("token");
-          setUser(null);
-        });
-    }
-
-
-
+    fetchUserProfile();
 
     const offcanvasEl = document.getElementById("mobileMenu");
 
@@ -82,7 +89,6 @@ export default function Navbar() {
       if (backdrop) backdrop.remove();
     })
 
-
   }, []);
 
 
@@ -90,6 +96,8 @@ export default function Navbar() {
   const handleLogout = () => {
     localStorage.removeItem("token");
     setUser(null);
+    fetchWishlist();
+    fetchCart();
     navigate("/", { state: { logoutSuccess: true } });
   };
 
@@ -177,8 +185,8 @@ export default function Navbar() {
                     <li className="dropdown-item-text fw-semibold">
                       {user.firstname} {user.lastname}
                     </li>
-                    <li className="dropdown-item-text onluser">
-                      <Link to="/order-detail" className="onluser link-underline-light  text-dark">My Order</Link>
+                    <li>
+                      <Link to="/order-detail" className="dropdown-item text-dark onluser link-underline-light">My Order</Link>
                     </li>
                     <li>
                       <button className="dropdown-item text-dark onluser" onClick={handleLogout}>
@@ -211,7 +219,7 @@ export default function Navbar() {
         </div>
       </nav>
 
-      <AuthModal showLogin={showLogin} setShowLogin={setShowLogin} />
+      <AuthModal showLogin={showLogin} setShowLogin={setShowLogin} onLoginSuccess={fetchUserProfile} />
 
       <div className="offcanvas offcanvas-start d-lg-none" id="mobileMenu">
         <div className="offcanvas-body">

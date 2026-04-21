@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 
 const Order_Detail = () => {
   const [orders, setOrders] = useState([]);
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -14,7 +15,7 @@ const Order_Detail = () => {
 
   const fetchOrders = async () => {
     try {
-
+      setLoading(true);
       const token = localStorage.getItem("token");
       const res = await Api.get("/myorders", {
         headers: {
@@ -25,8 +26,18 @@ const Order_Detail = () => {
       setOrders(res.data);
     } catch (error) {
       console.error("Error fetching orders", error);
+    } finally {
+      setLoading(false);
     }
   };
+
+  if (loading) return (
+    <div className="d-flex justify-content-center align-items-center" style={{ minHeight: '60vh' }}>
+      <div className="spinner-border" role="status">
+        <span className="visually-hidden">Loading...</span>
+      </div>
+    </div>
+  );
 
   return (
     <div className="d-flex justify-content-center mt-5">

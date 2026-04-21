@@ -60,12 +60,45 @@ export const WishlistProvider = ({ children }) => {
 
 
 
+  const toggleWishlist = async (productId) => {
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      const loginBtn = document.querySelector('[data-bs-target="#authModal"]');
+      loginBtn?.click();
+      return;
+    }
+
+    
+    const isCurrentlyInWishlist = wishlist.includes(productId);
+    const previousWishlist = [...wishlist];
+
+    if (isCurrentlyInWishlist) {
+      setWishlist(wishlist.filter(id => id !== productId));
+    } else {
+      setWishlist([...wishlist, productId]);
+    }
+
+    try {
+      await Api.post('/wishlist-toggle', { productId }, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      
+      
+    } catch (error) {
+      console.error("Wishlist toggle error", error);
+      setWishlist(previousWishlist);
+    }
+  };
+
   useEffect(() => {
     fetchWishlist();
   }, []);
 
   return (
-    <WishlistContext.Provider value={{ wishlist, fetchWishlist, fetchWishlistProducts }}>
+    <WishlistContext.Provider value={{ wishlist, fetchWishlist, fetchWishlistProducts, toggleWishlist }}>
       {children}
     </WishlistContext.Provider>
   )

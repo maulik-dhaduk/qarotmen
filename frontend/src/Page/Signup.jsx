@@ -1,9 +1,12 @@
 import { useState } from "react";
 import Api from "../Services/Api";
 
-export default function Signup({ switchToLogin }) {
+export default function Signup({
+  switchToLogin
+}) {
   const [form, setForm] = useState({});
   const [errors, setErrors] = useState({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const passwordRegex =
     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{8,}$/;
 
@@ -45,7 +48,10 @@ export default function Signup({ switchToLogin }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (isSubmitting) return;
     if (!validate()) return;
+
+    setIsSubmitting(true);
 
     try {
       await Api.post("/register", form);
@@ -54,13 +60,14 @@ export default function Signup({ switchToLogin }) {
       setErrors({
         api: err.response?.data.message || "Server error"
       });
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   return (
     <form onSubmit={handleSubmit}>
       {errors.api && <div className="alert alert-danger">{errors.api}</div>}
-
       <div className="row">
         <div className="col-12 col-sm-6 mb-3">
           <input className="form-control border-dark shadow-none" name="email" placeholder="Email*" value={form.email || ""} onChange={handleChange} />
@@ -95,7 +102,9 @@ export default function Signup({ switchToLogin }) {
         </div>
       </div>
 
-      <button className="btn btn-dark w-100">Register</button>
+      <button className="btn btn-dark w-100" disabled={isSubmitting}>
+        {isSubmitting ? "Registering..." : "Register"}
+      </button>
 
       <p className="text-center mt-3">
         Already have an account?

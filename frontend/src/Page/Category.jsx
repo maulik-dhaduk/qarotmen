@@ -11,7 +11,7 @@ export default function Category() {
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [sortOption, setSortOption] = useState("");
-    const { wishlist, fetchWishlist } = useWishlist();
+    const { wishlist, fetchWishlist, toggleWishlist } = useWishlist();
     const navigate = useNavigate()
 
     const apiCall = async () => {
@@ -26,24 +26,7 @@ export default function Category() {
         }
     }
 
-    const add_heart = async (productId) => {
-        const token = localStorage.getItem("token");
 
-        if (!token) {
-            const loginBtn = document.querySelector(
-                '[data-bs-target="#authModal"]'
-            );
-            loginBtn?.click();
-            return;
-        }
-
-        await Api.post('/wishlist-toggle', { productId }, {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        })
-        fetchWishlist();
-    }
 
     const handleid = ((id) => {
         navigate(`/Product?id=${id}`)
@@ -112,7 +95,7 @@ export default function Category() {
                             <div className="position-relative">
                                 <img src={`/upload/${p.images[0]}`} className="img-fluid" style={{ cursor: "pointer" }} alt="" onClick={() => handleid(p._id)} />
 
-                                <h5 className="position-absolute top-0 end-0 p-2 py-1 mt-3 me-3 rounded-5" style={{ cursor: "pointer" }} onClick={() => add_heart(p._id)}>
+                                <h5 className="position-absolute top-0 end-0 p-2 py-1 mt-3 me-3 rounded-5" style={{ cursor: "pointer" }} onClick={() => toggleWishlist(p._id)}>
                                     <i className={wishlist.includes(p._id) ? "bi bi-heart-fill text-danger" : "bi bi-heart"}></i>
                                 </h5>
                             </div>

@@ -6,19 +6,11 @@ import { useWishlist } from "../context/WishlistContext";
 
 const Cart = () => {
 
-  const { wishlist, fetchWishlist } = useWishlist();
+  const { wishlist, fetchWishlist, toggleWishlist } = useWishlist();
   const navigate = useNavigate();
   const { cart, removeFromCart } = useCart();
 
-  const add_heart = async (productId) => {
-    const token = localStorage.getItem("token");
-    await Api.post('/wishlist-toggle', { productId }, {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    })
-    fetchWishlist();
-  }
+
 
   const handleRemove = async (id) => {
     await removeFromCart(id);
@@ -117,7 +109,7 @@ const Cart = () => {
 
                             <span className="text-muted">|</span>
 
-                            <span className={`fw-semibold ${isInWishlist ? "text-success" : "text-muted"} ${isInWishlist ? "" : "cursor-pointer"}`} role={!isInWishlist ? "button" : undefined} onClick={!isInWishlist ? () => add_heart(item.productId._id) : undefined} style={{ cursor: isInWishlist ? "default" : "pointer" }} >
+                            <span className={`fw-semibold ${isInWishlist ? "text-success" : "text-muted"} ${isInWishlist ? "" : "cursor-pointer"}`} role={!isInWishlist ? "button" : undefined} onClick={!isInWishlist ? () => toggleWishlist(item.productId._id) : undefined} style={{ cursor: isInWishlist ? "default" : "pointer" }} >
                               {isInWishlist ? "ALREADY IN WISHLIST" : "MOVE TO WISHLIST"}
                             </span>
 

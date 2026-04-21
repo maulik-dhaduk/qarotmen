@@ -29,32 +29,42 @@ export const CartProvider = ({ children }) => {
 
 
   const addToCart = async (cartData) => {
+    const previousCart = [...cart];
+    
+    const tempId = `temp-${Date.now()}`;
+    setCart([...cart, { _id: tempId, ...cartData, productId: { _id: cartData.productId, price: 0, images: [] } }]);
+
     try {
       const token = localStorage.getItem("token");
-
       await Api.post("/cart", cartData, {
         headers: {
           Authorization: `Bearer ${token}`
         }
       });
-
-      fetchCart();
+      fetchCart(); 
     } catch (error) {
       console.error("Add cart error", error);
+      setCart(previousCart);
     }
   };
 
 
   const removeFromCart = async (id) => {
-    const token = localStorage.getItem("token");
+    const previousCart = [...cart];
+    
+    setCart(cart.filter(item => item._id !== id));
 
-    await Api.delete(`/cartdelete/${id}`, {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    });
-
-    fetchCart();
+    try {
+      const token = localStorage.getItem("token");
+      await Api.delete(`/cartdelete/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+    } catch (error) {
+      console.error("Remove cart error", error);
+      setCart(previousCart);
+    }
   };
 
   useEffect(() => {

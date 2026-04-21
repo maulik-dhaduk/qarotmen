@@ -13,7 +13,7 @@ export default function Product() {
   const [product, setProduct] = useState(null);
   const [mainImage, setMainImage] = useState(null);
   const id = searchParams.get("id");
-  const { wishlist, fetchWishlist } = useWishlist();
+  const { wishlist, fetchWishlist, toggleWishlist } = useWishlist();
   const [count, setcount] = useState(1)
   const [message, setmessage] = useState()
   const [showMessage, setShowMessage] = useState(false);
@@ -32,23 +32,7 @@ export default function Product() {
     }
   }
 
-  const add_heart = async (productId) => {
-    const token = localStorage.getItem("token");
 
-    if (!token) {
-      const loginBtn = document.querySelector(
-        '[data-bs-target="#authModal"]'
-      );
-      loginBtn?.click();
-      return;
-    }
-    await Api.post('/wishlist-toggle', { productId }, {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    })
-    fetchWishlist();
-  }
 
   const increment = () => {
     setcount(count + 1)
@@ -207,7 +191,7 @@ export default function Product() {
               Add To Cart
             </button>
 
-            <button className="btn border border-danger text-danger px-3 py-2" onClick={() => add_heart(product._id)}>
+            <button className="btn border border-danger text-danger px-3 py-2" onClick={() => toggleWishlist(product._id)}>
               <i className={wishlist.includes(product._id) ? "bi bi-heart-fill text-danger" : "bi bi-heart"}></i>
             </button>
           </div>

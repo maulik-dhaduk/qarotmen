@@ -3,43 +3,69 @@ import Api from "../Services/Api";
 import { useWishlist } from "../context/WishlistContext";
 import AOS from "aos";
 import "aos/dist/aos.css";
+import { useNavigate } from "react-router-dom";
 
 export default function Wishlist() {
-  const { wishlist, fetchWishlist, fetchWishlistProducts } = useWishlist();
+  const { wishlist, fetchWishlist, fetchWishlistProducts, toggleWishlist } = useWishlist();
   const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [hasLoadedOnce, setHasLoadedOnce] = useState(false);
+  const navigate = useNavigate();
+
+  const handleid = ((id) => {
+    navigate(`/Product?id=${id}`)
+  })
 
   useEffect(() => {
-  const getProducts = async () => {
-    if (!wishlist || wishlist.length === 0) {
-      setProducts([]);
-      return;
-    }
-    const prods = await fetchWishlistProducts();
-    setProducts(prods || []);
-  };
-  getProducts();
-}, [wishlist]);
+    const getProducts = async () => {
+      try {
+        if (!hasLoadedOnce) setLoading(true);
+        if (!wishlist || wishlist.length === 0) {
+          setProducts([]);
+          return;
+        }
 
+
+        const currentProductIds = products.map(p => p._id).sort().join(",");
+        const wishlistIds = [...wishlist].sort().join(",");
+
+        if (!hasLoadedOnce || currentProductIds !== wishlistIds) {
+          const prods = await fetchWishlistProducts();
+          setProducts(prods || []);
+        }
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
+        setHasLoadedOnce(true);
+      }
+    };
+    getProducts();
+  }, [wishlist]);
 
   const remove_heart = async (productId) => {
-    
-    const token = localStorage.getItem("token");
+
 
     setProducts(prev => prev.filter(product => product._id !== productId));
-    await Api.post('/wishlist-toggle', { productId },{
-      headers: {
-        Authorization: `Bearer ${token}`
-      }})
-    fetchWishlist();
-  }
+    await toggleWishlist(productId);
+  };
 
   useEffect(() => {
-      AOS.init({
-        once: true,
-      });
+    AOS.init({
+      once: true,
+    });
+    window.scrollTo(0, 0);
+  }, []);
 
-      window.scrollTo(0,0)
-    }, []);
+  if (loading) return (
+    <div className="d-flex justify-content-center align-items-center" style={{ minHeight: '60vh' }}>
+      <div className="spinner-border" role="status">
+        <span className="visually-hidden">Loading...</span>
+      </div>
+    </div>
+  );
+
+
   return (
     <div className="container my-5">
       <h4 className="text-center mb-4">My Wishlist</h4>
@@ -52,7 +78,7 @@ export default function Wishlist() {
               <button className="wishlist-close" onClick={() => remove_heart(product._id)}>×</button>
 
               <div className="p-2">
-                <img src={`upload/${product.images[0]}`} className="img-fluid" alt={product.name} />
+                <img src={`upload/${product.images[0]}`} className="img-fluid" style={{ cursor: "pointer" }} alt={product.name} onClick={() => handleid(product._id)} />
               </div>
 
               <div className="text-center px-2 pb-3">
