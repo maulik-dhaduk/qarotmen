@@ -4,7 +4,9 @@ const accountSchema = new mongoose.Schema({
     password:String,
     firstname:String,
     lastname:String,
-    role: String
+    role: String,
+    otp: String,
+    otpExpiration: Date
 })
 
 const Account_model = mongoose.model("account",accountSchema)

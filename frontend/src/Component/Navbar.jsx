@@ -185,6 +185,11 @@ export default function Navbar() {
                     <li className="dropdown-item-text fw-semibold">
                       {user.firstname} {user.lastname}
                     </li>
+                    {user.role === 'admin' && (
+                      <li>
+                        <Link to="/admin" className="dropdown-item text-dark fw-bold text-primary"><i className="bi bi-shield-lock me-1"></i> Admin Dashboard</Link>
+                      </li>
+                    )}
                     <li>
                       <Link to="/order-detail" className="dropdown-item text-dark onluser link-underline-light">My Order</Link>
                     </li>

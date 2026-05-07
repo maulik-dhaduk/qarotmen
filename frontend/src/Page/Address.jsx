@@ -133,7 +133,7 @@ const Address = () => {
 
                         <div className="mt-3">
                             <div className="input-group">
-                                <input name="mobile" className="form-control p-2 border-dark shadow-none" placeholder="Mobile" value={form.mobile || ""} onChange={handleChange} />
+                                <input name="mobile" className="form-control p-2 border-dark shadow-none" placeholder="Mobile Number" value={form.mobile || ""} onChange={handleChange} />
                             </div>
                             {errors.mobile && (<small className="text-danger">{errors.mobile}</small>)}
                         </div>
@@ -250,3 +250,4 @@ const Address = () => {
 };
 
 export default Address;
+

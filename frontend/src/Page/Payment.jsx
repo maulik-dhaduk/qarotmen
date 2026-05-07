@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useCart } from "../context/CartContext";
 import { Link, useNavigate } from "react-router-dom";
 import Api from "../Services/Api"
@@ -6,13 +6,15 @@ import Api from "../Services/Api"
 const Payment = () => {
   const { cart, address, setCart, setAddress } = useCart();
   const [formData, setFormData] = useState({
-    method: "card",
-    cardNumber: "",
-    expiry: "",
-    cvv: "",
-    cardName: "",
-    upiId: ""
+    method: "razorpay",
   });
+
+  useEffect(() => {
+    const script = document.createElement("script");
+    script.src = "https://checkout.razorpay.com/v1/checkout.js";
+    script.async = true;
+    document.body.appendChild(script);
+  }, []);
 
   const [errors, setErrors] = useState({});
   const navigate = useNavigate()
@@ -49,36 +51,77 @@ const Payment = () => {
   };
 
   const handleSubmit = async () => {
-    if (!validate()) return;
+    const token = localStorage.getItem("token");
 
-    try {
-      const token = localStorage.getItem("token");
+    if (formData.method === "cod") {
+      try {
+        await Api.post(
+          "/placeorder",
+          { shippingDetails: address, paymentMethod: "cod" },
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+        setCart([]);
+        setAddress(null);
+        navigate("/orderconfirmation");
+      } catch (error) {
+        console.error(error);
+        alert("Failed to place order");
+      }
+    } else if (formData.method === "razorpay") {
+      try {
+        
+        const orderRes = await Api.post(
+          "/create-razorpay-order",
+          { amount: subtotal },
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
 
-      await Api.post(
-        "/placeorder",
-        { shippingDetails: address, paymentMethod: formData.method },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+        const options = {
+          key: "rzp_test_SmTRoc5tWvhuxe",
+          amount: orderRes.data.amount,
+          currency: "INR",
+          name: "QAROT",
+          description: "Payment for Order",
+          order_id: orderRes.data.id,
+          handler: async function (response) {
+            try {
+              
+              await Api.post(
+                "/placeorder",
+                { 
+                  shippingDetails: address, 
+                  paymentMethod: "razorpay",
+                  razorpay_payment_id: response.razorpay_payment_id,
+                  razorpay_order_id: response.razorpay_order_id,
+                  razorpay_signature: response.razorpay_signature
+                },
+                { headers: { Authorization: `Bearer ${token}` } }
+              );
+              setCart([]);
+              setAddress(null);
+              navigate("/orderconfirmation");
+            } catch (err) {
+              console.error(err);
+              alert("Payment successful but failed to save order. Please contact support.");
+            }
+          },
+          prefill: {
+            name: `${address.firstname} ${address.lastname}`,
+            contact: address.mobile,
+          },
+          theme: {
+            color: "#000",
+          },
+        };
 
-      setCart([]);
-      setAddress(null);
-      setFormData({
-        method: "card",
-        cardNumber: "",
-        expiry: "",
-        cvv: "",
-        cardName: "",
-        upiId: ""
-      });
-
-      navigate("/orderconfirmation")
-      
-    } catch (error) {
-      console.error(error);
+        const rzp1 = new window.Razorpay(options);
+        rzp1.open();
+      } catch (error) {
+        console.error(error);
+        alert("Failed to initiate Razorpay payment");
+      }
     }
   };
-
-
 
   const subtotal = cart.reduce(
     (total, item) => total + item.productId.price * item.qty,
@@ -87,109 +130,34 @@ const Payment = () => {
 
   return (
     <div className="bg-white">
-
-      <div className="bg-light border-bottom">
-        <div className="container py-3">
-          <div className="row align-items-center text-center text-md-start">
-            <div className="col-12 col-md-3 mb-3 mb-md-0">
-              <Link to="/" className="navbar-brand fw-semibold fs-4 fs-lg-3 logo ms-2 me-0  ms-lg-0">
-                QAROT
-              </Link>
-            </div>
-            <div className="col-12 col-md-6 position-relative mb-3 mb-md-0">
-              <div className="d-flex justify-content-center align-items-center position-relative">
-                <div className="d-none d-md-block position-absolute w-75" style={{ height: "1px", background: "#ccc", top: "20px", zIndex: 0, }}></div>
-
-                {["CART", "ADDRESS", "PAYMENT"].map((step, index) => (
-                  <div key={index} className="text-center position-relative z-1 mx-3 mx-md-5">
-                    <div className={`rounded-circle d-flex justify-content-center align-items-center mx-auto ${index === 0 ? "bg-success text-white" : index === 1 ? "bg-success text-white" : index === 2 ? "bg-primary text-white" : "border bg-white"}`} style={{ width: "38px", height: "38px" }}>
-                      {index + 1}
-                    </div>
-
-                    <div style={{ fontSize: "12px", letterSpacing: "2px" }}>
-                      {step}
-                    </div>
-
-                  </div>
-                ))}
-              </div>
-            </div>
-
-
-            <div className="col-12 col-md-3 d-flex justify-content-center justify-content-md-end align-items-center gap-2">
-
-              <div className="bg-primary text-white d-flex justify-content-center align-items-center" style={{ width: "30px", height: "30px", borderRadius: "6px", }}>
-                <img src="cart/secure-shippoing-icon.svg" />
-              </div>
-
-              <span style={{ fontSize: "14px" }}>100% SECURE</span>
-
-            </div>
-
-          </div>
-        </div>
-      </div>
-
+      {}
+      {}
       <div className="container py-4">
         <div className="row">
-
           <div className="col-12 col-lg-8">
             <div className="card shadow-sm border-0 rounded-3">
               <div className="card-body p-4">
-
                 <h5 className="mb-3">Payment Information</h5>
-                {["card", "upi", "cod"].map((type) => (
-
-                  <div key={type} className={`border rounded-3 p-3 mb-2 d-flex align-items-center ${formData.method === type ? "border-dark bg-light" : "border-secondary"}`} style={{ cursor: "pointer" }} onClick={() => setFormData({ ...formData, method: type })}>
-
+                {["razorpay", "cod"].map((type) => (
+                  <div key={type} className={`border rounded-3 p-3 mb-2 d-flex align-items-center ${formData.method === type ? "border-dark bg-light" : "border-secondary"}`} style={{ cursor: "pointer" }} onClick={() => setFormData({ method: type })}>
                     <input type="radio" name="method" className="form-check-input me-2" checked={formData.method === type} readOnly />
-                    <label className="form-check-label fw-semibold">
-                      {type === "cod" ? "Cash on Delivery" : type.toUpperCase()}
+                    <label className="form-check-label fw-semibold text-capitalize">
+                      {type === "cod" ? "Cash on Delivery" : "Online Payment (Razorpay)"}
                     </label>
-
                   </div>
                 ))}
 
-                {formData.method === "card" && (
-                  <div className="mt-3">
-
-                    <input type="text" name="cardNumber" placeholder="Card Number" className="form-control" value={formData.cardNumber} onChange={handleChange} />
-                    {errors.cardNumber && (
-                      <small className="text-danger">{errors.cardNumber}</small>
-                    )}
-
-                    <input type="text" name="expiry" placeholder="MM/YY" className="form-control mt-2" value={formData.expiry} onChange={handleChange} />
-                    {errors.expiry && (
-                      <small className="text-danger">{errors.expiry}</small>
-                    )}
-
-                    <input type="text" name="cvv" placeholder="CVV" className="form-control mt-2" value={formData.cvv} onChange={(e) =>
-                      setFormData({ ...formData, cvv: e.target.value.replace(/\D/g, "") })
-                    } />
-                    {errors.cvv && (
-                      <small className="text-danger">{errors.cvv}</small>
-                    )}
-
-                    <input type="text" name="cardName" placeholder="Name on Card" className="form-control mt-2" value={formData.cardName} onChange={handleChange} />
-                    {errors.cardName && (
-                      <small className="text-danger">{errors.cardName}</small>
-                    )}
-
-                  </div>
-                )}
-
-                {formData.method === "upi" && (
-                  <div className="mt-3">
-                    <input type="text" name="upiId" placeholder="example@upi" className="form-control" value={formData.upiId} onChange={handleChange} />
-                    {errors.upiId && (
-                      <small className="text-danger">{errors.upiId}</small>
-                    )}
-                  </div>
-                )}
-
                 {formData.method === "cod" && (
-                  <div className="cod-msg mt-3">
-                    You will pay at the time of delivery.
+                  <div className="mt-3 p-2 bg-warning bg-opacity-10 rounded border border-warning text-dark small">
+                    <i className="bi bi-info-circle me-2"></i>
+                    You will pay the amount in cash at the time of delivery.
+                  </div>
+                )}
+
+                {formData.method === "razorpay" && (
+                  <div className="mt-3 p-2 bg-primary bg-opacity-10 rounded border border-primary text-dark small">
+                    <i className="bi bi-credit-card me-2"></i>
+                    Pay securely using Razorpay (UPI, Card, NetBanking, etc.)
                   </div>
                 )}
 
@@ -256,3 +224,4 @@ const Payment = () => {
 };
 
 export default Payment;
+

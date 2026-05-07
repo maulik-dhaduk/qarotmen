@@ -66,6 +66,20 @@ export default function Wishlist() {
   );
 
 
+  if (products.length === 0) {
+    return (
+      <div className="container my-5 text-center">
+        <h4 className="mb-4">My Wishlist</h4>
+        <div className="d-flex flex-column align-items-center justify-content-center" style={{ minHeight: '50vh', backgroundColor: '#f8f9fa', borderRadius: '10px' }}>
+          <i className="bi bi-heart-fill text-danger mb-3" style={{ fontSize: '5rem', opacity: 0.7 }}></i>
+          <h5 className="text-dark fw-bold">Your Wishlist is Empty</h5>
+          <p className="text-muted mb-4">Looks like you haven't added anything to your wishlist yet.</p>
+          <button className="btn btn-dark px-4 py-2" onClick={() => navigate('/')}>Continue Shopping</button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="container my-5">
       <h4 className="text-center mb-4">My Wishlist</h4>
@@ -94,3 +108,4 @@ export default function Wishlist() {
 
   );
 }
+

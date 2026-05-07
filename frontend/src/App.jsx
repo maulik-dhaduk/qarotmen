@@ -12,6 +12,7 @@ import Payment from "./Page/Payment";
 import OrderConfirmation from "./Page/OrderConfirmation";
 import Order_Detail from "./Page/Order-Detail";
 import Order_View from "./Page/Order_View";
+import AdminDashboard from "./Page/AdminDashboard";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import { useEffect } from "react";
@@ -42,9 +43,11 @@ function App() {
           <Route path="/cart" element={<Cart/>}></Route>
           <Route path="/payment" element={<Payment/>}></Route>
           <Route path="/orderconfirmation" element={<OrderConfirmation/>}></Route>
+          <Route path="/admin" element={<AdminDashboard/>}></Route>
       </Routes>
     </>
   )
 }
 
 export default App
+

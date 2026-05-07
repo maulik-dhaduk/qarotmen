@@ -8,8 +8,9 @@ const account_router = require("./route/Account_Route")
 const wishlist_router = require("./route/Wishlist_Route")
 const cart_router = require("./route/Cart_Route")
 const order_router = require("./route/Order_Route")
+const admin_router = require("./route/Admin_Route")
 const {default_product} = require("./controller/Product_Controller")
-const port = process.env.PORT
+const port = process.env.PORT || 5000
 const app = express()
 
 app.use(cors())
@@ -27,7 +28,9 @@ app.use(account_router);
 app.use(wishlist_router);
 app.use(order_router);
 app.use(cart_router);
+app.use(admin_router);
 
 app.listen(port,()=>{
     console.log("Server listen");
 })
+
