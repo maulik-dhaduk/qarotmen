@@ -210,7 +210,7 @@ export default function Signin({ switchToRegister, onLoginSuccess }) {
         <input type="password" className="form-control border-dark shadow-none" name="password" placeholder="Enter your password" value={form.password} onChange={handleChange} />
         {errors.password && <small className="text-danger">{errors.password}</small>}
       </div>
-      
+
       <div className="mb-3 d-flex justify-content-end">
         <span className="text-primary" style={{ cursor: "pointer" }} onClick={() => { setView("email"); setErrors({}); }}>Forgot Password?</span>
       </div>
