@@ -7,6 +7,8 @@ import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import { WishlistProvider } from "./context/WishlistContext";
 import { CartProvider } from './context/CartContext.jsx';
+import { registerSW } from 'virtual:pwa-register'
+registerSW({ immediate: true })
 
 createRoot(document.getElementById('root')).render(
   <BrowserRouter>
